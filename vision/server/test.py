@@ -5,6 +5,7 @@ from thrift.transport import TTransport
 from thrift.protocol import TBinaryProtocol
 from visionservice import VisionService
 from visionservice.ttypes import *
+import time
 
 try:
     transport = TSocket.TSocket('localhost', port=8080)
@@ -14,12 +15,15 @@ try:
 
     transport.open()
 
-    filter = Filter(FilterSourceType.RGB,
-        FilterSinkType.BINARY,
-        FilterType.RGB_THRESHOLD,
-        {})
-    print "OpenCV version: " + client.getOpenCVVersion()
-    print "Dummy filter result: " + str(client.applyFilter(filter))
+    input = InputSource(ImageSourceType.DEVICE, '')
+    filter = Filter(FilterSourceType.RGB, FilterSinkType.BINARY, 'RGB_THRESHOLD', {})
+
+    print "OpenCV version:\n\t" + client.getOpenCVVersion()
+    print "Available filters:\n\t" + str(client.getFilterList())
+    print "Connected cameras:\n\t" + str(client.getConnectedCameras())
+    print "Retrieve image:\n\t" + str(client.getImage(input))
+    print "Single filter result:\n\t" + str(client.applyFilter(filter))
+    print "Chained filter result:\n\t" + str(client.applyFilterChain([filter, filter]))
 
     transport.close()
 

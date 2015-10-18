@@ -4,6 +4,7 @@ from thrift.server import TServer
 from thrift.transport import TSocket
 from thrift.transport import TTransport
 from thrift.protocol import TBinaryProtocol
+import time
 import cv2
 
 class VisionServiceHandler:
@@ -13,14 +14,33 @@ class VisionServiceHandler:
     def getOpenCVVersion(self):
         return cv2.__version__
 
-    def applyFilter(self, filter):
-        print "Applying filter " + FilterType._VALUES_TO_NAMES[filter.filter]
-        res = Output('', {})
+    def getConnectedCameras(self):
+        return []
+
+    def getFilterList(self):
+        return [
+            'RGB_THRESHOLD',
+            'HSV_THRESHOLD'
+        ]
+
+    def getImage(self, source):
+        t_init = time.time()
+        time.sleep(0.25)
+        res = Output(imagePath='', data={}, computeTime=float(time.time()-t_init))
         return res
 
+    def getScaledImage(self, source, resolution):
+        return Output('', {})
+
+    def applyFilter(self, filter):
+        print "Applying filter: " + filter.filter
+        return Output('', {})
+
     def applyFilterChain(self, filters):
-        res = Output('', {})
-        return res
+        print "Applying filter chain: "
+        for f in filters:
+            print "\t" + f.filter
+        return Output('', {})
 
 visionHandler = VisionServiceHandler()
 processor = VisionService.Processor(visionHandler)
@@ -28,7 +48,7 @@ transport = TSocket.TServerSocket(port=8080)
 tfactory = TTransport.TBufferedTransportFactory()
 pfactory = TBinaryProtocol.TBinaryProtocolFactory()
 
-server = TServer.TSimpleServer(processor, transport, tfactory, pfactory)
+server = TServer.TThreadedServer(processor, transport, tfactory, pfactory)
 
 print 'Vision server started.'
 server.serve()

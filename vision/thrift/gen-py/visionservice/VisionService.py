@@ -19,7 +19,31 @@ except:
 
 
 class Iface:
+  """
+  Services
+  """
   def getOpenCVVersion(self):
+    pass
+
+  def getConnectedCameras(self):
+    pass
+
+  def getFilterList(self):
+    pass
+
+  def getImage(self, source):
+    """
+    Parameters:
+     - source
+    """
+    pass
+
+  def getScaledImage(self, source, resolution):
+    """
+    Parameters:
+     - source
+     - resolution
+    """
     pass
 
   def applyFilter(self, filter):
@@ -38,6 +62,9 @@ class Iface:
 
 
 class Client(Iface):
+  """
+  Services
+  """
   def __init__(self, iprot, oprot=None):
     self._iprot = self._oprot = iprot
     if oprot is not None:
@@ -70,6 +97,126 @@ class Client(Iface):
       return result.success
     raise TApplicationException(TApplicationException.MISSING_RESULT, "getOpenCVVersion failed: unknown result")
 
+  def getConnectedCameras(self):
+    self.send_getConnectedCameras()
+    return self.recv_getConnectedCameras()
+
+  def send_getConnectedCameras(self):
+    self._oprot.writeMessageBegin('getConnectedCameras', TMessageType.CALL, self._seqid)
+    args = getConnectedCameras_args()
+    args.write(self._oprot)
+    self._oprot.writeMessageEnd()
+    self._oprot.trans.flush()
+
+  def recv_getConnectedCameras(self):
+    iprot = self._iprot
+    (fname, mtype, rseqid) = iprot.readMessageBegin()
+    if mtype == TMessageType.EXCEPTION:
+      x = TApplicationException()
+      x.read(iprot)
+      iprot.readMessageEnd()
+      raise x
+    result = getConnectedCameras_result()
+    result.read(iprot)
+    iprot.readMessageEnd()
+    if result.success is not None:
+      return result.success
+    raise TApplicationException(TApplicationException.MISSING_RESULT, "getConnectedCameras failed: unknown result")
+
+  def getFilterList(self):
+    self.send_getFilterList()
+    return self.recv_getFilterList()
+
+  def send_getFilterList(self):
+    self._oprot.writeMessageBegin('getFilterList', TMessageType.CALL, self._seqid)
+    args = getFilterList_args()
+    args.write(self._oprot)
+    self._oprot.writeMessageEnd()
+    self._oprot.trans.flush()
+
+  def recv_getFilterList(self):
+    iprot = self._iprot
+    (fname, mtype, rseqid) = iprot.readMessageBegin()
+    if mtype == TMessageType.EXCEPTION:
+      x = TApplicationException()
+      x.read(iprot)
+      iprot.readMessageEnd()
+      raise x
+    result = getFilterList_result()
+    result.read(iprot)
+    iprot.readMessageEnd()
+    if result.success is not None:
+      return result.success
+    raise TApplicationException(TApplicationException.MISSING_RESULT, "getFilterList failed: unknown result")
+
+  def getImage(self, source):
+    """
+    Parameters:
+     - source
+    """
+    self.send_getImage(source)
+    return self.recv_getImage()
+
+  def send_getImage(self, source):
+    self._oprot.writeMessageBegin('getImage', TMessageType.CALL, self._seqid)
+    args = getImage_args()
+    args.source = source
+    args.write(self._oprot)
+    self._oprot.writeMessageEnd()
+    self._oprot.trans.flush()
+
+  def recv_getImage(self):
+    iprot = self._iprot
+    (fname, mtype, rseqid) = iprot.readMessageBegin()
+    if mtype == TMessageType.EXCEPTION:
+      x = TApplicationException()
+      x.read(iprot)
+      iprot.readMessageEnd()
+      raise x
+    result = getImage_result()
+    result.read(iprot)
+    iprot.readMessageEnd()
+    if result.success is not None:
+      return result.success
+    if result.snf is not None:
+      raise result.snf
+    raise TApplicationException(TApplicationException.MISSING_RESULT, "getImage failed: unknown result")
+
+  def getScaledImage(self, source, resolution):
+    """
+    Parameters:
+     - source
+     - resolution
+    """
+    self.send_getScaledImage(source, resolution)
+    return self.recv_getScaledImage()
+
+  def send_getScaledImage(self, source, resolution):
+    self._oprot.writeMessageBegin('getScaledImage', TMessageType.CALL, self._seqid)
+    args = getScaledImage_args()
+    args.source = source
+    args.resolution = resolution
+    args.write(self._oprot)
+    self._oprot.writeMessageEnd()
+    self._oprot.trans.flush()
+
+  def recv_getScaledImage(self):
+    iprot = self._iprot
+    (fname, mtype, rseqid) = iprot.readMessageBegin()
+    if mtype == TMessageType.EXCEPTION:
+      x = TApplicationException()
+      x.read(iprot)
+      iprot.readMessageEnd()
+      raise x
+    result = getScaledImage_result()
+    result.read(iprot)
+    iprot.readMessageEnd()
+    if result.success is not None:
+      return result.success
+    if result.snf is not None:
+      raise result.snf
+    raise TApplicationException(TApplicationException.MISSING_RESULT, "getScaledImage failed: unknown result")
+
   def applyFilter(self, filter):
     """
     Parameters:
@@ -99,6 +246,8 @@ class Client(Iface):
     iprot.readMessageEnd()
     if result.success is not None:
       return result.success
+    if result.snf is not None:
+      raise result.snf
     raise TApplicationException(TApplicationException.MISSING_RESULT, "applyFilter failed: unknown result")
 
   def applyFilterChain(self, filters):
@@ -130,6 +279,8 @@ class Client(Iface):
     iprot.readMessageEnd()
     if result.success is not None:
       return result.success
+    if result.snf is not None:
+      raise result.snf
     raise TApplicationException(TApplicationException.MISSING_RESULT, "applyFilterChain failed: unknown result")
 
 
@@ -138,6 +289,10 @@ class Processor(Iface, TProcessor):
     self._handler = handler
     self._processMap = {}
     self._processMap["getOpenCVVersion"] = Processor.process_getOpenCVVersion
+    self._processMap["getConnectedCameras"] = Processor.process_getConnectedCameras
+    self._processMap["getFilterList"] = Processor.process_getFilterList
+    self._processMap["getImage"] = Processor.process_getImage
+    self._processMap["getScaledImage"] = Processor.process_getScaledImage
     self._processMap["applyFilter"] = Processor.process_applyFilter
     self._processMap["applyFilterChain"] = Processor.process_applyFilterChain
 
@@ -175,6 +330,88 @@ class Processor(Iface, TProcessor):
     oprot.writeMessageEnd()
     oprot.trans.flush()
 
+  def process_getConnectedCameras(self, seqid, iprot, oprot):
+    args = getConnectedCameras_args()
+    args.read(iprot)
+    iprot.readMessageEnd()
+    result = getConnectedCameras_result()
+    try:
+      result.success = self._handler.getConnectedCameras()
+      msg_type = TMessageType.REPLY
+    except (TTransport.TTransportException, KeyboardInterrupt, SystemExit):
+      raise
+    except Exception as ex:
+      msg_type = TMessageType.EXCEPTION
+      logging.exception(ex)
+      result = TApplicationException(TApplicationException.INTERNAL_ERROR, 'Internal error')
+    oprot.writeMessageBegin("getConnectedCameras", msg_type, seqid)
+    result.write(oprot)
+    oprot.writeMessageEnd()
+    oprot.trans.flush()
+
+  def process_getFilterList(self, seqid, iprot, oprot):
+    args = getFilterList_args()
+    args.read(iprot)
+    iprot.readMessageEnd()
+    result = getFilterList_result()
+    try:
+      result.success = self._handler.getFilterList()
+      msg_type = TMessageType.REPLY
+    except (TTransport.TTransportException, KeyboardInterrupt, SystemExit):
+      raise
+    except Exception as ex:
+      msg_type = TMessageType.EXCEPTION
+      logging.exception(ex)
+      result = TApplicationException(TApplicationException.INTERNAL_ERROR, 'Internal error')
+    oprot.writeMessageBegin("getFilterList", msg_type, seqid)
+    result.write(oprot)
+    oprot.writeMessageEnd()
+    oprot.trans.flush()
+
+  def process_getImage(self, seqid, iprot, oprot):
+    args = getImage_args()
+    args.read(iprot)
+    iprot.readMessageEnd()
+    result = getImage_result()
+    try:
+      result.success = self._handler.getImage(args.source)
+      msg_type = TMessageType.REPLY
+    except (TTransport.TTransportException, KeyboardInterrupt, SystemExit):
+      raise
+    except SourceNotFound as snf:
+      msg_type = TMessageType.REPLY
+      result.snf = snf
+    except Exception as ex:
+      msg_type = TMessageType.EXCEPTION
+      logging.exception(ex)
+      result = TApplicationException(TApplicationException.INTERNAL_ERROR, 'Internal error')
+    oprot.writeMessageBegin("getImage", msg_type, seqid)
+    result.write(oprot)
+    oprot.writeMessageEnd()
+    oprot.trans.flush()
+
+  def process_getScaledImage(self, seqid, iprot, oprot):
+    args = getScaledImage_args()
+    args.read(iprot)
+    iprot.readMessageEnd()
+    result = getScaledImage_result()
+    try:
+      result.success = self._handler.getScaledImage(args.source, args.resolution)
+      msg_type = TMessageType.REPLY
+    except (TTransport.TTransportException, KeyboardInterrupt, SystemExit):
+      raise
+    except SourceNotFound as snf:
+      msg_type = TMessageType.REPLY
+      result.snf = snf
+    except Exception as ex:
+      msg_type = TMessageType.EXCEPTION
+      logging.exception(ex)
+      result = TApplicationException(TApplicationException.INTERNAL_ERROR, 'Internal error')
+    oprot.writeMessageBegin("getScaledImage", msg_type, seqid)
+    result.write(oprot)
+    oprot.writeMessageEnd()
+    oprot.trans.flush()
+
   def process_applyFilter(self, seqid, iprot, oprot):
     args = applyFilter_args()
     args.read(iprot)
@@ -185,6 +422,9 @@ class Processor(Iface, TProcessor):
       msg_type = TMessageType.REPLY
     except (TTransport.TTransportException, KeyboardInterrupt, SystemExit):
       raise
+    except SourceNotFound as snf:
+      msg_type = TMessageType.REPLY
+      result.snf = snf
     except Exception as ex:
       msg_type = TMessageType.EXCEPTION
       logging.exception(ex)
@@ -204,6 +444,9 @@ class Processor(Iface, TProcessor):
       msg_type = TMessageType.REPLY
     except (TTransport.TTransportException, KeyboardInterrupt, SystemExit):
       raise
+    except SourceNotFound as snf:
+      msg_type = TMessageType.REPLY
+      result.snf = snf
     except Exception as ex:
       msg_type = TMessageType.EXCEPTION
       logging.exception(ex)
@@ -326,6 +569,553 @@ class getOpenCVVersion_result:
   def __ne__(self, other):
     return not (self == other)
 
+class getConnectedCameras_args:
+
+  thrift_spec = (
+  )
+
+  def read(self, iprot):
+    if iprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None and fastbinary is not None:
+      fastbinary.decode_binary(self, iprot.trans, (self.__class__, self.thrift_spec))
+      return
+    iprot.readStructBegin()
+    while True:
+      (fname, ftype, fid) = iprot.readFieldBegin()
+      if ftype == TType.STOP:
+        break
+      else:
+        iprot.skip(ftype)
+      iprot.readFieldEnd()
+    iprot.readStructEnd()
+
+  def write(self, oprot):
+    if oprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and self.thrift_spec is not None and fastbinary is not None:
+      oprot.trans.write(fastbinary.encode_binary(self, (self.__class__, self.thrift_spec)))
+      return
+    oprot.writeStructBegin('getConnectedCameras_args')
+    oprot.writeFieldStop()
+    oprot.writeStructEnd()
+
+  def validate(self):
+    return
+
+
+  def __hash__(self):
+    value = 17
+    return value
+
+  def __repr__(self):
+    L = ['%s=%r' % (key, value)
+      for key, value in self.__dict__.iteritems()]
+    return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+  def __eq__(self, other):
+    return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+  def __ne__(self, other):
+    return not (self == other)
+
+class getConnectedCameras_result:
+  """
+  Attributes:
+   - success
+  """
+
+  thrift_spec = (
+    (0, TType.LIST, 'success', (TType.STRUCT,(Camera, Camera.thrift_spec)), None, ), # 0
+  )
+
+  def __init__(self, success=None,):
+    self.success = success
+
+  def read(self, iprot):
+    if iprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None and fastbinary is not None:
+      fastbinary.decode_binary(self, iprot.trans, (self.__class__, self.thrift_spec))
+      return
+    iprot.readStructBegin()
+    while True:
+      (fname, ftype, fid) = iprot.readFieldBegin()
+      if ftype == TType.STOP:
+        break
+      if fid == 0:
+        if ftype == TType.LIST:
+          self.success = []
+          (_etype21, _size18) = iprot.readListBegin()
+          for _i22 in xrange(_size18):
+            _elem23 = Camera()
+            _elem23.read(iprot)
+            self.success.append(_elem23)
+          iprot.readListEnd()
+        else:
+          iprot.skip(ftype)
+      else:
+        iprot.skip(ftype)
+      iprot.readFieldEnd()
+    iprot.readStructEnd()
+
+  def write(self, oprot):
+    if oprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and self.thrift_spec is not None and fastbinary is not None:
+      oprot.trans.write(fastbinary.encode_binary(self, (self.__class__, self.thrift_spec)))
+      return
+    oprot.writeStructBegin('getConnectedCameras_result')
+    if self.success is not None:
+      oprot.writeFieldBegin('success', TType.LIST, 0)
+      oprot.writeListBegin(TType.STRUCT, len(self.success))
+      for iter24 in self.success:
+        iter24.write(oprot)
+      oprot.writeListEnd()
+      oprot.writeFieldEnd()
+    oprot.writeFieldStop()
+    oprot.writeStructEnd()
+
+  def validate(self):
+    return
+
+
+  def __hash__(self):
+    value = 17
+    value = (value * 31) ^ hash(self.success)
+    return value
+
+  def __repr__(self):
+    L = ['%s=%r' % (key, value)
+      for key, value in self.__dict__.iteritems()]
+    return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+  def __eq__(self, other):
+    return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+  def __ne__(self, other):
+    return not (self == other)
+
+class getFilterList_args:
+
+  thrift_spec = (
+  )
+
+  def read(self, iprot):
+    if iprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None and fastbinary is not None:
+      fastbinary.decode_binary(self, iprot.trans, (self.__class__, self.thrift_spec))
+      return
+    iprot.readStructBegin()
+    while True:
+      (fname, ftype, fid) = iprot.readFieldBegin()
+      if ftype == TType.STOP:
+        break
+      else:
+        iprot.skip(ftype)
+      iprot.readFieldEnd()
+    iprot.readStructEnd()
+
+  def write(self, oprot):
+    if oprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and self.thrift_spec is not None and fastbinary is not None:
+      oprot.trans.write(fastbinary.encode_binary(self, (self.__class__, self.thrift_spec)))
+      return
+    oprot.writeStructBegin('getFilterList_args')
+    oprot.writeFieldStop()
+    oprot.writeStructEnd()
+
+  def validate(self):
+    return
+
+
+  def __hash__(self):
+    value = 17
+    return value
+
+  def __repr__(self):
+    L = ['%s=%r' % (key, value)
+      for key, value in self.__dict__.iteritems()]
+    return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+  def __eq__(self, other):
+    return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+  def __ne__(self, other):
+    return not (self == other)
+
+class getFilterList_result:
+  """
+  Attributes:
+   - success
+  """
+
+  thrift_spec = (
+    (0, TType.LIST, 'success', (TType.STRING,None), None, ), # 0
+  )
+
+  def __init__(self, success=None,):
+    self.success = success
+
+  def read(self, iprot):
+    if iprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None and fastbinary is not None:
+      fastbinary.decode_binary(self, iprot.trans, (self.__class__, self.thrift_spec))
+      return
+    iprot.readStructBegin()
+    while True:
+      (fname, ftype, fid) = iprot.readFieldBegin()
+      if ftype == TType.STOP:
+        break
+      if fid == 0:
+        if ftype == TType.LIST:
+          self.success = []
+          (_etype28, _size25) = iprot.readListBegin()
+          for _i29 in xrange(_size25):
+            _elem30 = iprot.readString()
+            self.success.append(_elem30)
+          iprot.readListEnd()
+        else:
+          iprot.skip(ftype)
+      else:
+        iprot.skip(ftype)
+      iprot.readFieldEnd()
+    iprot.readStructEnd()
+
+  def write(self, oprot):
+    if oprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and self.thrift_spec is not None and fastbinary is not None:
+      oprot.trans.write(fastbinary.encode_binary(self, (self.__class__, self.thrift_spec)))
+      return
+    oprot.writeStructBegin('getFilterList_result')
+    if self.success is not None:
+      oprot.writeFieldBegin('success', TType.LIST, 0)
+      oprot.writeListBegin(TType.STRING, len(self.success))
+      for iter31 in self.success:
+        oprot.writeString(iter31)
+      oprot.writeListEnd()
+      oprot.writeFieldEnd()
+    oprot.writeFieldStop()
+    oprot.writeStructEnd()
+
+  def validate(self):
+    return
+
+
+  def __hash__(self):
+    value = 17
+    value = (value * 31) ^ hash(self.success)
+    return value
+
+  def __repr__(self):
+    L = ['%s=%r' % (key, value)
+      for key, value in self.__dict__.iteritems()]
+    return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+  def __eq__(self, other):
+    return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+  def __ne__(self, other):
+    return not (self == other)
+
+class getImage_args:
+  """
+  Attributes:
+   - source
+  """
+
+  thrift_spec = (
+    None, # 0
+    (1, TType.STRUCT, 'source', (InputSource, InputSource.thrift_spec), None, ), # 1
+  )
+
+  def __init__(self, source=None,):
+    self.source = source
+
+  def read(self, iprot):
+    if iprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None and fastbinary is not None:
+      fastbinary.decode_binary(self, iprot.trans, (self.__class__, self.thrift_spec))
+      return
+    iprot.readStructBegin()
+    while True:
+      (fname, ftype, fid) = iprot.readFieldBegin()
+      if ftype == TType.STOP:
+        break
+      if fid == 1:
+        if ftype == TType.STRUCT:
+          self.source = InputSource()
+          self.source.read(iprot)
+        else:
+          iprot.skip(ftype)
+      else:
+        iprot.skip(ftype)
+      iprot.readFieldEnd()
+    iprot.readStructEnd()
+
+  def write(self, oprot):
+    if oprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and self.thrift_spec is not None and fastbinary is not None:
+      oprot.trans.write(fastbinary.encode_binary(self, (self.__class__, self.thrift_spec)))
+      return
+    oprot.writeStructBegin('getImage_args')
+    if self.source is not None:
+      oprot.writeFieldBegin('source', TType.STRUCT, 1)
+      self.source.write(oprot)
+      oprot.writeFieldEnd()
+    oprot.writeFieldStop()
+    oprot.writeStructEnd()
+
+  def validate(self):
+    if self.source is None:
+      raise TProtocol.TProtocolException(message='Required field source is unset!')
+    return
+
+
+  def __hash__(self):
+    value = 17
+    value = (value * 31) ^ hash(self.source)
+    return value
+
+  def __repr__(self):
+    L = ['%s=%r' % (key, value)
+      for key, value in self.__dict__.iteritems()]
+    return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+  def __eq__(self, other):
+    return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+  def __ne__(self, other):
+    return not (self == other)
+
+class getImage_result:
+  """
+  Attributes:
+   - success
+   - snf
+  """
+
+  thrift_spec = (
+    (0, TType.STRUCT, 'success', (Output, Output.thrift_spec), None, ), # 0
+    (1, TType.STRUCT, 'snf', (SourceNotFound, SourceNotFound.thrift_spec), None, ), # 1
+  )
+
+  def __init__(self, success=None, snf=None,):
+    self.success = success
+    self.snf = snf
+
+  def read(self, iprot):
+    if iprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None and fastbinary is not None:
+      fastbinary.decode_binary(self, iprot.trans, (self.__class__, self.thrift_spec))
+      return
+    iprot.readStructBegin()
+    while True:
+      (fname, ftype, fid) = iprot.readFieldBegin()
+      if ftype == TType.STOP:
+        break
+      if fid == 0:
+        if ftype == TType.STRUCT:
+          self.success = Output()
+          self.success.read(iprot)
+        else:
+          iprot.skip(ftype)
+      elif fid == 1:
+        if ftype == TType.STRUCT:
+          self.snf = SourceNotFound()
+          self.snf.read(iprot)
+        else:
+          iprot.skip(ftype)
+      else:
+        iprot.skip(ftype)
+      iprot.readFieldEnd()
+    iprot.readStructEnd()
+
+  def write(self, oprot):
+    if oprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and self.thrift_spec is not None and fastbinary is not None:
+      oprot.trans.write(fastbinary.encode_binary(self, (self.__class__, self.thrift_spec)))
+      return
+    oprot.writeStructBegin('getImage_result')
+    if self.success is not None:
+      oprot.writeFieldBegin('success', TType.STRUCT, 0)
+      self.success.write(oprot)
+      oprot.writeFieldEnd()
+    if self.snf is not None:
+      oprot.writeFieldBegin('snf', TType.STRUCT, 1)
+      self.snf.write(oprot)
+      oprot.writeFieldEnd()
+    oprot.writeFieldStop()
+    oprot.writeStructEnd()
+
+  def validate(self):
+    return
+
+
+  def __hash__(self):
+    value = 17
+    value = (value * 31) ^ hash(self.success)
+    value = (value * 31) ^ hash(self.snf)
+    return value
+
+  def __repr__(self):
+    L = ['%s=%r' % (key, value)
+      for key, value in self.__dict__.iteritems()]
+    return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+  def __eq__(self, other):
+    return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+  def __ne__(self, other):
+    return not (self == other)
+
+class getScaledImage_args:
+  """
+  Attributes:
+   - source
+   - resolution
+  """
+
+  thrift_spec = (
+    None, # 0
+    (1, TType.STRUCT, 'source', (InputSource, InputSource.thrift_spec), None, ), # 1
+    (2, TType.STRUCT, 'resolution', (Resolution, Resolution.thrift_spec), None, ), # 2
+  )
+
+  def __init__(self, source=None, resolution=None,):
+    self.source = source
+    self.resolution = resolution
+
+  def read(self, iprot):
+    if iprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None and fastbinary is not None:
+      fastbinary.decode_binary(self, iprot.trans, (self.__class__, self.thrift_spec))
+      return
+    iprot.readStructBegin()
+    while True:
+      (fname, ftype, fid) = iprot.readFieldBegin()
+      if ftype == TType.STOP:
+        break
+      if fid == 1:
+        if ftype == TType.STRUCT:
+          self.source = InputSource()
+          self.source.read(iprot)
+        else:
+          iprot.skip(ftype)
+      elif fid == 2:
+        if ftype == TType.STRUCT:
+          self.resolution = Resolution()
+          self.resolution.read(iprot)
+        else:
+          iprot.skip(ftype)
+      else:
+        iprot.skip(ftype)
+      iprot.readFieldEnd()
+    iprot.readStructEnd()
+
+  def write(self, oprot):
+    if oprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and self.thrift_spec is not None and fastbinary is not None:
+      oprot.trans.write(fastbinary.encode_binary(self, (self.__class__, self.thrift_spec)))
+      return
+    oprot.writeStructBegin('getScaledImage_args')
+    if self.source is not None:
+      oprot.writeFieldBegin('source', TType.STRUCT, 1)
+      self.source.write(oprot)
+      oprot.writeFieldEnd()
+    if self.resolution is not None:
+      oprot.writeFieldBegin('resolution', TType.STRUCT, 2)
+      self.resolution.write(oprot)
+      oprot.writeFieldEnd()
+    oprot.writeFieldStop()
+    oprot.writeStructEnd()
+
+  def validate(self):
+    if self.source is None:
+      raise TProtocol.TProtocolException(message='Required field source is unset!')
+    if self.resolution is None:
+      raise TProtocol.TProtocolException(message='Required field resolution is unset!')
+    return
+
+
+  def __hash__(self):
+    value = 17
+    value = (value * 31) ^ hash(self.source)
+    value = (value * 31) ^ hash(self.resolution)
+    return value
+
+  def __repr__(self):
+    L = ['%s=%r' % (key, value)
+      for key, value in self.__dict__.iteritems()]
+    return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+  def __eq__(self, other):
+    return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+  def __ne__(self, other):
+    return not (self == other)
+
+class getScaledImage_result:
+  """
+  Attributes:
+   - success
+   - snf
+  """
+
+  thrift_spec = (
+    (0, TType.STRUCT, 'success', (Output, Output.thrift_spec), None, ), # 0
+    (1, TType.STRUCT, 'snf', (SourceNotFound, SourceNotFound.thrift_spec), None, ), # 1
+  )
+
+  def __init__(self, success=None, snf=None,):
+    self.success = success
+    self.snf = snf
+
+  def read(self, iprot):
+    if iprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None and fastbinary is not None:
+      fastbinary.decode_binary(self, iprot.trans, (self.__class__, self.thrift_spec))
+      return
+    iprot.readStructBegin()
+    while True:
+      (fname, ftype, fid) = iprot.readFieldBegin()
+      if ftype == TType.STOP:
+        break
+      if fid == 0:
+        if ftype == TType.STRUCT:
+          self.success = Output()
+          self.success.read(iprot)
+        else:
+          iprot.skip(ftype)
+      elif fid == 1:
+        if ftype == TType.STRUCT:
+          self.snf = SourceNotFound()
+          self.snf.read(iprot)
+        else:
+          iprot.skip(ftype)
+      else:
+        iprot.skip(ftype)
+      iprot.readFieldEnd()
+    iprot.readStructEnd()
+
+  def write(self, oprot):
+    if oprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and self.thrift_spec is not None and fastbinary is not None:
+      oprot.trans.write(fastbinary.encode_binary(self, (self.__class__, self.thrift_spec)))
+      return
+    oprot.writeStructBegin('getScaledImage_result')
+    if self.success is not None:
+      oprot.writeFieldBegin('success', TType.STRUCT, 0)
+      self.success.write(oprot)
+      oprot.writeFieldEnd()
+    if self.snf is not None:
+      oprot.writeFieldBegin('snf', TType.STRUCT, 1)
+      self.snf.write(oprot)
+      oprot.writeFieldEnd()
+    oprot.writeFieldStop()
+    oprot.writeStructEnd()
+
+  def validate(self):
+    return
+
+
+  def __hash__(self):
+    value = 17
+    value = (value * 31) ^ hash(self.success)
+    value = (value * 31) ^ hash(self.snf)
+    return value
+
+  def __repr__(self):
+    L = ['%s=%r' % (key, value)
+      for key, value in self.__dict__.iteritems()]
+    return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+  def __eq__(self, other):
+    return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+  def __ne__(self, other):
+    return not (self == other)
+
 class applyFilter_args:
   """
   Attributes:
@@ -398,14 +1188,17 @@ class applyFilter_result:
   """
   Attributes:
    - success
+   - snf
   """
 
   thrift_spec = (
     (0, TType.STRUCT, 'success', (Output, Output.thrift_spec), None, ), # 0
+    (1, TType.STRUCT, 'snf', (SourceNotFound, SourceNotFound.thrift_spec), None, ), # 1
   )
 
-  def __init__(self, success=None,):
+  def __init__(self, success=None, snf=None,):
     self.success = success
+    self.snf = snf
 
   def read(self, iprot):
     if iprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None and fastbinary is not None:
@@ -422,6 +1215,12 @@ class applyFilter_result:
           self.success.read(iprot)
         else:
           iprot.skip(ftype)
+      elif fid == 1:
+        if ftype == TType.STRUCT:
+          self.snf = SourceNotFound()
+          self.snf.read(iprot)
+        else:
+          iprot.skip(ftype)
       else:
         iprot.skip(ftype)
       iprot.readFieldEnd()
@@ -436,6 +1235,10 @@ class applyFilter_result:
       oprot.writeFieldBegin('success', TType.STRUCT, 0)
       self.success.write(oprot)
       oprot.writeFieldEnd()
+    if self.snf is not None:
+      oprot.writeFieldBegin('snf', TType.STRUCT, 1)
+      self.snf.write(oprot)
+      oprot.writeFieldEnd()
     oprot.writeFieldStop()
     oprot.writeStructEnd()
 
@@ -446,6 +1249,7 @@ class applyFilter_result:
   def __hash__(self):
     value = 17
     value = (value * 31) ^ hash(self.success)
+    value = (value * 31) ^ hash(self.snf)
     return value
 
   def __repr__(self):
@@ -485,11 +1289,11 @@ class applyFilterChain_args:
       if fid == 1:
         if ftype == TType.LIST:
           self.filters = []
-          (_etype21, _size18) = iprot.readListBegin()
-          for _i22 in xrange(_size18):
-            _elem23 = Filter()
-            _elem23.read(iprot)
-            self.filters.append(_elem23)
+          (_etype35, _size32) = iprot.readListBegin()
+          for _i36 in xrange(_size32):
+            _elem37 = Filter()
+            _elem37.read(iprot)
+            self.filters.append(_elem37)
           iprot.readListEnd()
         else:
           iprot.skip(ftype)
@@ -506,8 +1310,8 @@ class applyFilterChain_args:
     if self.filters is not None:
       oprot.writeFieldBegin('filters', TType.LIST, 1)
       oprot.writeListBegin(TType.STRUCT, len(self.filters))
-      for iter24 in self.filters:
-        iter24.write(oprot)
+      for iter38 in self.filters:
+        iter38.write(oprot)
       oprot.writeListEnd()
       oprot.writeFieldEnd()
     oprot.writeFieldStop()
@@ -539,14 +1343,17 @@ class applyFilterChain_result:
   """
   Attributes:
    - success
+   - snf
   """
 
   thrift_spec = (
     (0, TType.STRUCT, 'success', (Output, Output.thrift_spec), None, ), # 0
+    (1, TType.STRUCT, 'snf', (SourceNotFound, SourceNotFound.thrift_spec), None, ), # 1
   )
 
-  def __init__(self, success=None,):
+  def __init__(self, success=None, snf=None,):
     self.success = success
+    self.snf = snf
 
   def read(self, iprot):
     if iprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None and fastbinary is not None:
@@ -563,6 +1370,12 @@ class applyFilterChain_result:
           self.success.read(iprot)
         else:
           iprot.skip(ftype)
+      elif fid == 1:
+        if ftype == TType.STRUCT:
+          self.snf = SourceNotFound()
+          self.snf.read(iprot)
+        else:
+          iprot.skip(ftype)
       else:
         iprot.skip(ftype)
       iprot.readFieldEnd()
@@ -577,6 +1390,10 @@ class applyFilterChain_result:
       oprot.writeFieldBegin('success', TType.STRUCT, 0)
       self.success.write(oprot)
       oprot.writeFieldEnd()
+    if self.snf is not None:
+      oprot.writeFieldBegin('snf', TType.STRUCT, 1)
+      self.snf.write(oprot)
+      oprot.writeFieldEnd()
     oprot.writeFieldStop()
     oprot.writeStructEnd()
 
@@ -587,6 +1404,7 @@ class applyFilterChain_result:
   def __hash__(self):
     value = 17
     value = (value * 31) ^ hash(self.success)
+    value = (value * 31) ^ hash(self.snf)
     return value
 
   def __repr__(self):

@@ -11,6 +11,9 @@ import java.util.Map;
 import java.util.HashMap;
 import org.apache.thrift.TEnum;
 
+/**
+ * Enumerations
+ */
 public enum ImageSourceType implements org.apache.thrift.TEnum {
   IMAGE(0),
   VIDEO(1),

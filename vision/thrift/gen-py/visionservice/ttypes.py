@@ -17,6 +17,9 @@ except:
 
 
 class ImageSourceType:
+  """
+  Enumerations
+  """
   IMAGE = 0
   VIDEO = 1
   DEVICE = 2
@@ -85,35 +88,81 @@ class FilterSinkType:
     "MAP": 5,
   }
 
-class FilterType:
-  RGB_THRESHOLD = 0
-  HSV_THRESHOLD = 1
-  GAUSSIAN_BLUR = 2
-  CANNY_EDGE = 3
-  HOUGH_LINE = 4
-  HOUGH_CIRCLE = 5
 
-  _VALUES_TO_NAMES = {
-    0: "RGB_THRESHOLD",
-    1: "HSV_THRESHOLD",
-    2: "GAUSSIAN_BLUR",
-    3: "CANNY_EDGE",
-    4: "HOUGH_LINE",
-    5: "HOUGH_CIRCLE",
-  }
+class SourceNotFound(TException):
+  """
+  Exceptions
 
-  _NAMES_TO_VALUES = {
-    "RGB_THRESHOLD": 0,
-    "HSV_THRESHOLD": 1,
-    "GAUSSIAN_BLUR": 2,
-    "CANNY_EDGE": 3,
-    "HOUGH_LINE": 4,
-    "HOUGH_CIRCLE": 5,
-  }
+  Attributes:
+   - path
+  """
 
+  thrift_spec = (
+    None, # 0
+    (1, TType.STRING, 'path', None, None, ), # 1
+  )
+
+  def __init__(self, path=None,):
+    self.path = path
+
+  def read(self, iprot):
+    if iprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None and fastbinary is not None:
+      fastbinary.decode_binary(self, iprot.trans, (self.__class__, self.thrift_spec))
+      return
+    iprot.readStructBegin()
+    while True:
+      (fname, ftype, fid) = iprot.readFieldBegin()
+      if ftype == TType.STOP:
+        break
+      if fid == 1:
+        if ftype == TType.STRING:
+          self.path = iprot.readString()
+        else:
+          iprot.skip(ftype)
+      else:
+        iprot.skip(ftype)
+      iprot.readFieldEnd()
+    iprot.readStructEnd()
+
+  def write(self, oprot):
+    if oprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and self.thrift_spec is not None and fastbinary is not None:
+      oprot.trans.write(fastbinary.encode_binary(self, (self.__class__, self.thrift_spec)))
+      return
+    oprot.writeStructBegin('SourceNotFound')
+    if self.path is not None:
+      oprot.writeFieldBegin('path', TType.STRING, 1)
+      oprot.writeString(self.path)
+      oprot.writeFieldEnd()
+    oprot.writeFieldStop()
+    oprot.writeStructEnd()
+
+  def validate(self):
+    return
+
+
+  def __str__(self):
+    return repr(self)
+
+  def __hash__(self):
+    value = 17
+    value = (value * 31) ^ hash(self.path)
+    return value
+
+  def __repr__(self):
+    L = ['%s=%r' % (key, value)
+      for key, value in self.__dict__.iteritems()]
+    return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+  def __eq__(self, other):
+    return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+  def __ne__(self, other):
+    return not (self == other)
 
 class InputSource:
   """
+  Structures
+
   Attributes:
    - source
    - path
@@ -199,17 +248,20 @@ class Output:
   Attributes:
    - imagePath
    - data
+   - computeTime
   """
 
   thrift_spec = (
     None, # 0
     (1, TType.STRING, 'imagePath', None, None, ), # 1
     (2, TType.MAP, 'data', (TType.STRING,None,TType.DOUBLE,None), None, ), # 2
+    (3, TType.DOUBLE, 'computeTime', None, None, ), # 3
   )
 
-  def __init__(self, imagePath=None, data=None,):
+  def __init__(self, imagePath=None, data=None, computeTime=None,):
     self.imagePath = imagePath
     self.data = data
+    self.computeTime = computeTime
 
   def read(self, iprot):
     if iprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None and fastbinary is not None:
@@ -236,6 +288,11 @@ class Output:
           iprot.readMapEnd()
         else:
           iprot.skip(ftype)
+      elif fid == 3:
+        if ftype == TType.DOUBLE:
+          self.computeTime = iprot.readDouble()
+        else:
+          iprot.skip(ftype)
       else:
         iprot.skip(ftype)
       iprot.readFieldEnd()
@@ -258,6 +315,10 @@ class Output:
         oprot.writeDouble(viter8)
       oprot.writeMapEnd()
       oprot.writeFieldEnd()
+    if self.computeTime is not None:
+      oprot.writeFieldBegin('computeTime', TType.DOUBLE, 3)
+      oprot.writeDouble(self.computeTime)
+      oprot.writeFieldEnd()
     oprot.writeFieldStop()
     oprot.writeStructEnd()
 
@@ -269,6 +330,7 @@ class Output:
     value = 17
     value = (value * 31) ^ hash(self.imagePath)
     value = (value * 31) ^ hash(self.data)
+    value = (value * 31) ^ hash(self.computeTime)
     return value
 
   def __repr__(self):
@@ -295,7 +357,7 @@ class Filter:
     None, # 0
     (1, TType.I32, 'sourceType', None, None, ), # 1
     (2, TType.I32, 'sinkType', None, None, ), # 2
-    (3, TType.I32, 'filter', None, None, ), # 3
+    (3, TType.STRING, 'filter', None, None, ), # 3
     (4, TType.MAP, 'params', (TType.STRING,None,TType.DOUBLE,None), None, ), # 4
   )
 
@@ -325,8 +387,8 @@ class Filter:
         else:
           iprot.skip(ftype)
       elif fid == 3:
-        if ftype == TType.I32:
-          self.filter = iprot.readI32()
+        if ftype == TType.STRING:
+          self.filter = iprot.readString()
         else:
           iprot.skip(ftype)
       elif fid == 4:
@@ -359,8 +421,8 @@ class Filter:
       oprot.writeI32(self.sinkType)
       oprot.writeFieldEnd()
     if self.filter is not None:
-      oprot.writeFieldBegin('filter', TType.I32, 3)
-      oprot.writeI32(self.filter)
+      oprot.writeFieldBegin('filter', TType.STRING, 3)
+      oprot.writeString(self.filter)
       oprot.writeFieldEnd()
     if self.params is not None:
       oprot.writeFieldBegin('params', TType.MAP, 4)
@@ -391,6 +453,177 @@ class Filter:
     value = (value * 31) ^ hash(self.sinkType)
     value = (value * 31) ^ hash(self.filter)
     value = (value * 31) ^ hash(self.params)
+    return value
+
+  def __repr__(self):
+    L = ['%s=%r' % (key, value)
+      for key, value in self.__dict__.iteritems()]
+    return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+  def __eq__(self, other):
+    return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+  def __ne__(self, other):
+    return not (self == other)
+
+class Resolution:
+  """
+  Attributes:
+   - horizontal
+   - vertical
+  """
+
+  thrift_spec = (
+    None, # 0
+    (1, TType.I32, 'horizontal', None, None, ), # 1
+    (2, TType.I32, 'vertical', None, None, ), # 2
+  )
+
+  def __init__(self, horizontal=None, vertical=None,):
+    self.horizontal = horizontal
+    self.vertical = vertical
+
+  def read(self, iprot):
+    if iprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None and fastbinary is not None:
+      fastbinary.decode_binary(self, iprot.trans, (self.__class__, self.thrift_spec))
+      return
+    iprot.readStructBegin()
+    while True:
+      (fname, ftype, fid) = iprot.readFieldBegin()
+      if ftype == TType.STOP:
+        break
+      if fid == 1:
+        if ftype == TType.I32:
+          self.horizontal = iprot.readI32()
+        else:
+          iprot.skip(ftype)
+      elif fid == 2:
+        if ftype == TType.I32:
+          self.vertical = iprot.readI32()
+        else:
+          iprot.skip(ftype)
+      else:
+        iprot.skip(ftype)
+      iprot.readFieldEnd()
+    iprot.readStructEnd()
+
+  def write(self, oprot):
+    if oprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and self.thrift_spec is not None and fastbinary is not None:
+      oprot.trans.write(fastbinary.encode_binary(self, (self.__class__, self.thrift_spec)))
+      return
+    oprot.writeStructBegin('Resolution')
+    if self.horizontal is not None:
+      oprot.writeFieldBegin('horizontal', TType.I32, 1)
+      oprot.writeI32(self.horizontal)
+      oprot.writeFieldEnd()
+    if self.vertical is not None:
+      oprot.writeFieldBegin('vertical', TType.I32, 2)
+      oprot.writeI32(self.vertical)
+      oprot.writeFieldEnd()
+    oprot.writeFieldStop()
+    oprot.writeStructEnd()
+
+  def validate(self):
+    if self.horizontal is None:
+      raise TProtocol.TProtocolException(message='Required field horizontal is unset!')
+    if self.vertical is None:
+      raise TProtocol.TProtocolException(message='Required field vertical is unset!')
+    return
+
+
+  def __hash__(self):
+    value = 17
+    value = (value * 31) ^ hash(self.horizontal)
+    value = (value * 31) ^ hash(self.vertical)
+    return value
+
+  def __repr__(self):
+    L = ['%s=%r' % (key, value)
+      for key, value in self.__dict__.iteritems()]
+    return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+  def __eq__(self, other):
+    return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+  def __ne__(self, other):
+    return not (self == other)
+
+class Camera:
+  """
+  Attributes:
+   - deviceName
+   - resolution
+  """
+
+  thrift_spec = (
+    None, # 0
+    (1, TType.STRING, 'deviceName', None, None, ), # 1
+    None, # 2
+    None, # 3
+    None, # 4
+    None, # 5
+    None, # 6
+    None, # 7
+    None, # 8
+    None, # 9
+    (10, TType.STRUCT, 'resolution', (Resolution, Resolution.thrift_spec), None, ), # 10
+  )
+
+  def __init__(self, deviceName=None, resolution=None,):
+    self.deviceName = deviceName
+    self.resolution = resolution
+
+  def read(self, iprot):
+    if iprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None and fastbinary is not None:
+      fastbinary.decode_binary(self, iprot.trans, (self.__class__, self.thrift_spec))
+      return
+    iprot.readStructBegin()
+    while True:
+      (fname, ftype, fid) = iprot.readFieldBegin()
+      if ftype == TType.STOP:
+        break
+      if fid == 1:
+        if ftype == TType.STRING:
+          self.deviceName = iprot.readString()
+        else:
+          iprot.skip(ftype)
+      elif fid == 10:
+        if ftype == TType.STRUCT:
+          self.resolution = Resolution()
+          self.resolution.read(iprot)
+        else:
+          iprot.skip(ftype)
+      else:
+        iprot.skip(ftype)
+      iprot.readFieldEnd()
+    iprot.readStructEnd()
+
+  def write(self, oprot):
+    if oprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and self.thrift_spec is not None and fastbinary is not None:
+      oprot.trans.write(fastbinary.encode_binary(self, (self.__class__, self.thrift_spec)))
+      return
+    oprot.writeStructBegin('Camera')
+    if self.deviceName is not None:
+      oprot.writeFieldBegin('deviceName', TType.STRING, 1)
+      oprot.writeString(self.deviceName)
+      oprot.writeFieldEnd()
+    if self.resolution is not None:
+      oprot.writeFieldBegin('resolution', TType.STRUCT, 10)
+      self.resolution.write(oprot)
+      oprot.writeFieldEnd()
+    oprot.writeFieldStop()
+    oprot.writeStructEnd()
+
+  def validate(self):
+    if self.deviceName is None:
+      raise TProtocol.TProtocolException(message='Required field deviceName is unset!')
+    return
+
+
+  def __hash__(self):
+    value = 17
+    value = (value * 31) ^ hash(self.deviceName)
+    value = (value * 31) ^ hash(self.resolution)
     return value
 
   def __repr__(self):

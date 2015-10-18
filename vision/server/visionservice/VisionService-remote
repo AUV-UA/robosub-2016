@@ -25,6 +25,10 @@ if len(sys.argv) <= 1 or sys.argv[1] == '--help':
   print('')
   print('Functions:')
   print('  string getOpenCVVersion()')
+  print('   getConnectedCameras()')
+  print('   getFilterList()')
+  print('  Output getImage(InputSource source)')
+  print('  Output getScaledImage(InputSource source, Resolution resolution)')
   print('  Output applyFilter(Filter filter)')
   print('  Output applyFilterChain( filters)')
   print('')
@@ -88,6 +92,30 @@ if cmd == 'getOpenCVVersion':
     print('getOpenCVVersion requires 0 args')
     sys.exit(1)
   pp.pprint(client.getOpenCVVersion())
+
+elif cmd == 'getConnectedCameras':
+  if len(args) != 0:
+    print('getConnectedCameras requires 0 args')
+    sys.exit(1)
+  pp.pprint(client.getConnectedCameras())
+
+elif cmd == 'getFilterList':
+  if len(args) != 0:
+    print('getFilterList requires 0 args')
+    sys.exit(1)
+  pp.pprint(client.getFilterList())
+
+elif cmd == 'getImage':
+  if len(args) != 1:
+    print('getImage requires 1 args')
+    sys.exit(1)
+  pp.pprint(client.getImage(eval(args[0]),))
+
+elif cmd == 'getScaledImage':
+  if len(args) != 2:
+    print('getScaledImage requires 2 args')
+    sys.exit(1)
+  pp.pprint(client.getScaledImage(eval(args[0]),eval(args[1]),))
 
 elif cmd == 'applyFilter':
   if len(args) != 1:

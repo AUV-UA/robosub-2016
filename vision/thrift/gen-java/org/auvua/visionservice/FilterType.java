@@ -17,7 +17,8 @@ public enum FilterType implements org.apache.thrift.TEnum {
   GAUSSIAN_BLUR(2),
   CANNY_EDGE(3),
   HOUGH_LINE(4),
-  HOUGH_CIRCLE(5);
+  HOUGH_CIRCLE(5),
+  SCALE(6);
 
   private final int value;
 
@@ -50,6 +51,8 @@ public enum FilterType implements org.apache.thrift.TEnum {
         return HOUGH_LINE;
       case 5:
         return HOUGH_CIRCLE;
+      case 6:
+        return SCALE;
       default:
         return null;
     }
