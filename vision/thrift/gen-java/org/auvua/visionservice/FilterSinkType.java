@@ -17,7 +17,8 @@ public enum FilterSinkType implements org.apache.thrift.TEnum {
   HSV(2),
   HSL(3),
   BINARY(4),
-  MAP(5);
+  MAP(5),
+  INPUT(6);
 
   private final int value;
 
@@ -50,6 +51,8 @@ public enum FilterSinkType implements org.apache.thrift.TEnum {
         return BINARY;
       case 5:
         return MAP;
+      case 6:
+        return INPUT;
       default:
         return null;
     }

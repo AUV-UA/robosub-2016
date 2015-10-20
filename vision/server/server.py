@@ -4,10 +4,22 @@ from thrift.server import TServer
 from thrift.transport import TSocket
 from thrift.transport import TTransport
 from thrift.protocol import TBinaryProtocol
+import filters
 import time
+import json
+import os
 import cv2
 
+filterMap = {}
+# There's probably a better way to import the filters dynamically
+for m in os.listdir("./filters" ):
+    if m.endswith( ".py" ) and m != "__init__.py":
+        filtername = m[:-3]
+        mod = __import__("filters." + filtername)
+        filterMap[filtername] = getattr(getattr(mod, filtername), filtername)
+
 class VisionServiceHandler:
+
     def __init__(self):
         pass
 
@@ -18,10 +30,7 @@ class VisionServiceHandler:
         return []
 
     def getFilterList(self):
-        return [
-            'RGB_THRESHOLD',
-            'HSV_THRESHOLD'
-        ]
+        return filterMap.keys()
 
     def getImage(self, source):
         t_init = time.time()
@@ -33,13 +42,9 @@ class VisionServiceHandler:
         return Output('', {})
 
     def applyFilter(self, filter):
-        print "Applying filter: " + filter.filter
         return Output('', {})
 
     def applyFilterChain(self, filters):
-        print "Applying filter chain: "
-        for f in filters:
-            print "\t" + f.filter
         return Output('', {})
 
 visionHandler = VisionServiceHandler()
