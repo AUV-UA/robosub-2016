@@ -33,7 +33,7 @@ class Scale:
         return res
 
 if __name__=='__main__':
-    img = cv2.imread('server/filters/lena.png')
+    img = cv2.imread('filters/lena.png')
     scale = Scale()
     scale.params['xRatio'] = 0.5
     scale.params['yRatio'] = 0.5

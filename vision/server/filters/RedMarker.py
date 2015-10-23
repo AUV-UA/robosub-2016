@@ -1,13 +1,13 @@
 from visionservice.ttypes import *
 import cv2
 
-class RGBThreshold:
+class RedMarker:
     inputTypes = [
         FilterSourceType.RGB,
         FilterSourceType.BGR
     ]
     outputTypes = [
-        FilterSinkType.BINARY
+        FilterSinkType.MAP
     ]
     paramList = ['rMin', 'rMax', 'gMin', 'gMax', 'bMin', 'bMax']
 
@@ -30,16 +30,32 @@ class RGBThreshold:
         upper = (self.params['rMax'],
                  self.params['gMax'],
                  self.params['bMax'])
-        res = cv2.inRange(img, lower, upper)
+
+        filtered = cv2.inRange(img, lower, upper)
+        avg_center = (-1, -1)
+        moms = cv2.moments(filtered)
+        size = moms['m00'] / 100
+
+        res = Output(data={})
+
+        if size != 0:
+            avg_X = int(moms['m10'] / moms['m00'])
+            avg_Y = int(moms['m01'] / moms['m00'])
+
+            res.data['buoy_visible'] = True
+            res.data['x_position'] = avg_X
+            res.data['y_position'] = avg_Y
+            res.data['size'] = size
+
         return res
 
 if __name__=='__main__':
     img = cv2.imread('filters/lena.png')
-    thresh = RGBThreshold()
+    thresh = RedMarker()
     thresh.params['rMin'] = 100.0
     thresh.params['rMax'] = 200.0
     res = thresh.run(img)
 
-    cv2.imshow('res', res)
+    print res
     cv2.waitKey(0)
     cv2.destroyAllWindows()
