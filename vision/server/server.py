@@ -49,7 +49,7 @@ class VisionServiceHandler:
 
 visionHandler = VisionServiceHandler()
 processor = VisionService.Processor(visionHandler)
-transport = TSocket.TServerSocket(port=8080)
+transport = TSocket.TServerSocket(port=5000)
 tfactory = TTransport.TBufferedTransportFactory()
 pfactory = TBinaryProtocol.TBinaryProtocolFactory()
 
