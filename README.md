@@ -3,6 +3,7 @@
 
 The software is split into standalone programs, with Apache Thrift used for both message passing and remote function calls.
 
+
 ## Vision
 The vision server is implemented in Python and requires OpenCV 2.X/3.0, along with the OpenCV python bindings.
 
@@ -17,4 +18,10 @@ python test.py
 ```
 
 ## Logging
-The logging server is implemented in Python. This is the central logging service for all programs - outputs should be redirected as messages to this service if they are important enough to be logged for the end-user.
+The logging server is implemented in Nodejs. This is the central logging service for all programs - outputs should be redirected as messages to this service if they are important enough to be logged for the end-user.
+
+Set up the logging service by installing node dependencies.
+Navigate to `INSTALL_DIR/logging/` and run:
+```
+npm install
+```

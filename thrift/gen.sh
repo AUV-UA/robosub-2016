@@ -16,13 +16,13 @@ done
 #clean up directories, then copy related files
 echo ""
 echo "Copying generated files to ../vision/server/"
-rm -rf ../vision/server/visionservice
-rm -rf ../vision/server/logservice
-cp -r ./gen-py/visionservice ../vision/server/
-cp -r ./gen-py/logservice ../vision/server/
+rm -rf ../vision/visionservice
+rm -rf ../vision/logservice
+cp -r ./gen-py/visionservice ../vision/
+cp -r ./gen-py/logservice ../vision/
 
 echo "Copying generated files to ../logging/server/"
-rm -rf ../logging/server/logservice
-cp -r ./gen-py/logservice ../logging/server
+rm -rf ../logging/logservice/*
+cp -r ./gen-nodejs/* ../logging/logservice
 
 echo -e "\nDone."
