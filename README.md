@@ -3,6 +3,9 @@
 
 The software is split into standalone programs, with Apache Thrift used for both message passing and remote function calls.
 
+## Thrift Setup
+Start by installing the latest version of [Apache Thrift](https://thrift.apache.org/docs/install/).
+Then, navigate to `INSTALL_DIR/thrift/` and run `gen.sh`. This will generate and install the thrift services in their respective service directories.
 
 ## Vision
 The vision server is implemented in Python and requires OpenCV 2.X/3.0, along with the OpenCV python bindings.
