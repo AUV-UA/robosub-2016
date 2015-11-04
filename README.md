@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/forbesk/robosub-2016.svg?branch=citest)](https://travis-ci.org/forbesk/robosub-2016)
 # robosub-2016
 2016 AUV software for Danger 'Zona and more.
 
