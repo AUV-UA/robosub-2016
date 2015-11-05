@@ -69,7 +69,6 @@ class FilterSinkType:
   HSL = 3
   BINARY = 4
   MAP = 5
-  INPUT = 6
 
   _VALUES_TO_NAMES = {
     0: "RGB",
@@ -78,7 +77,6 @@ class FilterSinkType:
     3: "HSL",
     4: "BINARY",
     5: "MAP",
-    6: "INPUT",
   }
 
   _NAMES_TO_VALUES = {
@@ -88,7 +86,6 @@ class FilterSinkType:
     "HSL": 3,
     "BINARY": 4,
     "MAP": 5,
-    "INPUT": 6,
   }
 
 

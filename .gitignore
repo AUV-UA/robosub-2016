@@ -1,1 +1,5 @@
 *.pyc
+thrift/gen-py/
+thrift/gen-java/
+thrift/gen-nodejs/
+node_modules/
