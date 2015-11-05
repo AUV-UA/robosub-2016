@@ -1,5 +1,6 @@
-[![Build Status](https://travis-ci.org/forbesk/robosub-2016.svg?branch=citest)](https://travis-ci.org/forbesk/robosub-2016)
 # robosub-2016
+[![Build Status](https://travis-ci.org/AUV-UA/robosub-2016.svg?branch=master)](https://travis-ci.org/AUV-UA/robosub-2016)
+
 2016 AUV software for Danger 'Zona and more.
 
 The software is split into standalone programs, with Apache Thrift used for both message passing and remote function calls.
