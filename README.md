@@ -12,12 +12,14 @@ Then, navigate to `REPO_DIR/thrift/` and run `gen.sh`. This will generate and in
 ## Remote Interface
 The GUI, or remote interface (AUVUA-RI) for the vehicle is implemented as a server - specifically, an expressjs app. The related code is located under `/remote`.
 
-Start the server:
+Install dependencies first, then start the server:
 ```
-cd remote && npm Start
+cd remote
+npm install
+npm start
 ```
 
-Then, navigate a browser to point to the target machine's IP at port 3000. If viewing on the machine, the URL would be `localhost:3000`.
+Navigate a browser to point to the target machine's IP at port 3000. If viewing on the machine, the URL would be `localhost:3000`.
 
 Enjoy!
 
