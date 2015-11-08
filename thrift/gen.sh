@@ -1,5 +1,10 @@
 #!/bin/bash
 
+#make sure we're in the script directory
+if [ -d ${0%/*} ] ; then
+  cd ${0%/*}
+fi
+
 #remove old generated files
 echo "Removing old files"
 rm -rf ./gen-*
