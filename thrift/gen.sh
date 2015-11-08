@@ -30,4 +30,5 @@ echo "Copying generated files to ../logging/server/"
 rm -rf ../logging/logservice/*
 cp -r ./gen-nodejs/* ../logging/logservice
 
-echo -e "\nDone."
+echo ""
+echo "Done."

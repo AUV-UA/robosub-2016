@@ -1,27 +1,11 @@
+var test = require('unit.js');
+var fs = require('fs');
 var thrift = require('thrift');
 var Logger = require('./logservice/LogService');
 var ttypes = require('./logservice/LogService_types');
 
-var connection = thrift.createConnection("localhost", 5001);
-client = thrift.createClient(Logger, connection);
 
-connection.on('error', function(err) {
-  console.log(err);
-});
-
-client.getLogFileList(function(err, response) {
-  console.log("File list: " + response);
-});
-
-client.setLogDirectory('/home/auvua/log', function(err, response) {
-  console.log(response);
-});
-
-client.startLogging('test.txt', function(err, response) {
-  console.log('startLogging(test.txt)');
-});
-
-msg = {
+var msg = {
   'time': Date.now(),
   'Test message': "does it work?",
   'I think': 42,
@@ -29,20 +13,90 @@ msg = {
   'x': 0
 };
 
-x = 0;
-setInterval(function() {
-  msg['x'] = ++x;
-  msg['time'] = Date.now();
-  client.log(ttypes.Level.INFO, JSON.stringify(msg), function(err, response) {
-    console.log("logging data");
-  });
-  if (x > 100) {
-    client.stopLogging(function(err, response) {
-      client.getLogFile('test.txt', function(err, response) {
-        console.log("File: " + response);
-        connection.end();
-        process.exit();
-      });
+
+var connection = thrift.createConnection("localhost", 5001);
+var client = thrift.createClient(Logger, connection);
+
+connection.on('error', function(err) {
+  test.assert(err, false);
+});
+
+describe('Logging to new file', function() {
+  it('don\'t set the log directory to "/should/not/exist"', function(done) {
+    client.setLogDirectory('/should/not/exist', function(err, response) {
+      test.assert(response === false);
+      done();
     });
-  }
-}, 10);
+  });
+
+  it('set the log directory to ./', function(done) {
+    client.setLogDirectory('./', function(err, response) {
+      test.assert(response === true);
+      done();
+    });
+  });
+
+  it('return a non-empty list of files in ./', function(done) {
+    client.getLogFileList(function(err, response) {
+      test.assert(response.length > 0);
+      done();
+    });
+  });
+
+  it('start logging to "test.txt"', function(done) {
+    client.startLogging('test.txt', function(err, response) {
+      test.assert(response === true);
+      done();
+    });
+  });
+
+  it('don\'t start logging if it already is', function(done) {
+    client.startLogging('test.txt', function(err, response) {
+      test.assert(response === false);
+      done();
+    });
+  });
+
+  it('is logging when actually logging', function(done) {
+    client.isLogging(function(err, response) {
+      test.assert(response === true);
+      done();
+    });
+  });
+
+  it('writes out message to log file "./test.txt"', function(done) {
+    var textmsg = JSON.stringify(msg);
+    client.log(ttypes.Level.INFO, textmsg);
+    setTimeout(function() {
+      var contents = fs.readFileSync('./test.txt');
+      var rxmsg = JSON.stringify(JSON.parse(contents)['message']);
+      test.assert(rxmsg === textmsg);
+      done();
+    }, 5);
+  });
+
+  it('stop logging if currently logging', function(done) {
+    client.stopLogging(function(err, response) {
+      test.assert(response === true);
+      done();
+    });
+  });
+
+  it('stop logging when not logging', function(done) {
+    client.stopLogging(function(err, response) {
+      test.assert(response === true);
+      done();
+    });
+  });
+
+  it('is not logging when not actually logging', function(done) {
+    client.isLogging(function(err, response) {
+      test.assert(response === false);
+      done();
+    });
+  });
+
+  after(function() {
+    fs.unlinkSync('./test.txt');
+  });
+});

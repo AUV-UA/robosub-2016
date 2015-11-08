@@ -456,6 +456,87 @@ LogService_startLogging_result.prototype.write = function(output) {
   return;
 };
 
+LogService_isLogging_args = function(args) {
+};
+LogService_isLogging_args.prototype = {};
+LogService_isLogging_args.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    input.skip(ftype);
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+LogService_isLogging_args.prototype.write = function(output) {
+  output.writeStructBegin('LogService_isLogging_args');
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
+LogService_isLogging_result = function(args) {
+  this.success = null;
+  if (args) {
+    if (args.success !== undefined && args.success !== null) {
+      this.success = args.success;
+    }
+  }
+};
+LogService_isLogging_result.prototype = {};
+LogService_isLogging_result.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    switch (fid)
+    {
+      case 0:
+      if (ftype == Thrift.Type.BOOL) {
+        this.success = input.readBool();
+      } else {
+        input.skip(ftype);
+      }
+      break;
+      case 0:
+        input.skip(ftype);
+        break;
+      default:
+        input.skip(ftype);
+    }
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+LogService_isLogging_result.prototype.write = function(output) {
+  output.writeStructBegin('LogService_isLogging_result');
+  if (this.success !== null && this.success !== undefined) {
+    output.writeFieldBegin('success', Thrift.Type.BOOL, 0);
+    output.writeBool(this.success);
+    output.writeFieldEnd();
+  }
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+
 LogService_stopLogging_args = function(args) {
 };
 LogService_stopLogging_args.prototype = {};
@@ -834,6 +915,52 @@ LogServiceClient.prototype.recv_startLogging = function(input,mtype,rseqid) {
   }
   return callback('startLogging failed: unknown result');
 };
+LogServiceClient.prototype.isLogging = function(callback) {
+  this._seqid = this.new_seqid();
+  if (callback === undefined) {
+    var _defer = Q.defer();
+    this._reqs[this.seqid()] = function(error, result) {
+      if (error) {
+        _defer.reject(error);
+      } else {
+        _defer.resolve(result);
+      }
+    };
+    this.send_isLogging();
+    return _defer.promise;
+  } else {
+    this._reqs[this.seqid()] = callback;
+    this.send_isLogging();
+  }
+};
+
+LogServiceClient.prototype.send_isLogging = function() {
+  var output = new this.pClass(this.output);
+  output.writeMessageBegin('isLogging', Thrift.MessageType.CALL, this.seqid());
+  var args = new LogService_isLogging_args();
+  args.write(output);
+  output.writeMessageEnd();
+  return this.output.flush();
+};
+
+LogServiceClient.prototype.recv_isLogging = function(input,mtype,rseqid) {
+  var callback = this._reqs[rseqid] || function() {};
+  delete this._reqs[rseqid];
+  if (mtype == Thrift.MessageType.EXCEPTION) {
+    var x = new Thrift.TApplicationException();
+    x.read(input);
+    input.readMessageEnd();
+    return callback(x);
+  }
+  var result = new LogService_isLogging_result();
+  result.read(input);
+  input.readMessageEnd();
+
+  if (null !== result.success) {
+    return callback(null, result.success);
+  }
+  return callback('isLogging failed: unknown result');
+};
 LogServiceClient.prototype.stopLogging = function(callback) {
   this._seqid = this.new_seqid();
   if (callback === undefined) {
@@ -1064,6 +1191,41 @@ LogServiceProcessor.prototype.process_startLogging = function(seqid, input, outp
       } else {
         var result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
         output.writeMessageBegin("startLogging", Thrift.MessageType.EXCEPTION, seqid);
+      }
+      result.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    });
+  }
+}
+
+LogServiceProcessor.prototype.process_isLogging = function(seqid, input, output) {
+  var args = new LogService_isLogging_args();
+  args.read(input);
+  input.readMessageEnd();
+  if (this._handler.isLogging.length === 0) {
+    Q.fcall(this._handler.isLogging)
+      .then(function(result) {
+        var result = new LogService_isLogging_result({success: result});
+        output.writeMessageBegin("isLogging", Thrift.MessageType.REPLY, seqid);
+        result.write(output);
+        output.writeMessageEnd();
+        output.flush();
+      }, function (err) {
+        var result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+        output.writeMessageBegin("isLogging", Thrift.MessageType.EXCEPTION, seqid);
+        result.write(output);
+        output.writeMessageEnd();
+        output.flush();
+      });
+  } else {
+    this._handler.isLogging(function (err, result) {
+      if (err == null) {
+        var result = new LogService_isLogging_result((err != null ? err : {success: result}));
+        output.writeMessageBegin("isLogging", Thrift.MessageType.REPLY, seqid);
+      } else {
+        var result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+        output.writeMessageBegin("isLogging", Thrift.MessageType.EXCEPTION, seqid);
       }
       result.write(output);
       output.writeMessageEnd();

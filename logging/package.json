@@ -4,11 +4,14 @@
   "description": "AUV general-purpose logging",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha test"
   },
   "author": "auvua",
   "license": "ISC",
   "dependencies": {
-    "thrift": "^0.9.3"
+    "debug": "^2.2.0",
+    "mocha": "^2.3.3",
+    "thrift": "^0.9.3",
+    "unit.js": "^2.0.0"
   }
 }

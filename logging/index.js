@@ -1,3 +1,4 @@
+var debug = require("debug")("app");
 var fs = require("fs");
 var thrift = require("thrift");
 var Logger = require("./logservice/LogService");
@@ -20,17 +21,17 @@ var updateLogFileList = function() {
 
 var LoggerHandler = {
   setLogDirectory: function(path, result) {
-    if (fs.statSync(path).isDirectory()) {
-      // TODO: check for directory issues
-      dir = path;
-      updateLogFileList();
-      console.log("Directory found!");
-      result(null, true);
-    } else {
-      // TODO: throw an error
-      console.log("Directory is bad!");
-      result(null, false);
+    try {
+      process.chdir(path);
+    } catch(e) {
+    debug("Directory is bad!");
+    result(null, false);
+    return;
     }
+    dir = process.cwd();
+    updateLogFileList();
+    debug("Directory found!");
+    result(null, true);
   },
 
   getLogFileList: function(result) {
@@ -50,24 +51,31 @@ var LoggerHandler = {
     if (!file) {
       file = fs.createWriteStream(dir + '/' + filename, {
         flags: 'w'
-      });
-      file.on('error', function(err) {
-        console.log("error opening file: " + err);
-        file.end();
-        file = false;
-      });
-      file.on('open', function() {
-        console.log("logging to file: " + filename);
-        initTime = getHrTimeMs();
-        fileList.push(filename);
-      });
+      })
+        .on('error', function(err) {
+          debug("error opening file: " + err);
+          file.end();
+          file = false;
+          result(null, false);
+        })
+        .on('open', function() {
+          debug("logging to file: " + filename);
+          initTime = getHrTimeMs();
+          updateLogFileList();
+          result(null, true);
+        });
+    } else {
+      result(null, false);
     }
-    result(null, true);
+  },
+
+  isLogging: function(result) {
+    result(null, (file !== false));
   },
 
   stopLogging: function(result) {
     if (file) {
-      console.log("stopping logging to file");
+      debug("stopping logging to file");
       file.end();
       file = false;
     }
@@ -77,8 +85,7 @@ var LoggerHandler = {
   log: function(level, message) {
     try {
       message = JSON.parse(message)
-    } catch (e) {
-    }
+    } catch (e) { }
     jsonmsg = {
       'time': getHrTimeMs() - initTime,
       'level': level,

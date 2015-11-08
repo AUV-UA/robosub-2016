@@ -28,6 +28,7 @@ if len(sys.argv) <= 1 or sys.argv[1] == '--help':
   print('   getLogFileList()')
   print('  string getLogFile(string filename)')
   print('  bool startLogging(string filename)')
+  print('  bool isLogging()')
   print('  bool stopLogging()')
   print('  void log(Level level, string message)')
   print('')
@@ -109,6 +110,12 @@ elif cmd == 'startLogging':
     print('startLogging requires 1 args')
     sys.exit(1)
   pp.pprint(client.startLogging(args[0],))
+
+elif cmd == 'isLogging':
+  if len(args) != 0:
+    print('isLogging requires 0 args')
+    sys.exit(1)
+  pp.pprint(client.isLogging())
 
 elif cmd == 'stopLogging':
   if len(args) != 0:
