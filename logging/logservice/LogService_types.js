@@ -10,7 +10,40 @@ var Q = thrift.Q;
 
 var ttypes = module.exports = {};
 ttypes.Level = {
-  'INFO' : 0,
-  'WARNING' : 1,
-  'SEVERE' : 2
+  'DEBUG' : 0,
+  'INFO' : 1,
+  'WARNING' : 2,
+  'ERROR' : 3,
+  'FATAL' : 4
 };
+FileNotFound = module.exports.FileNotFound = function(args) {
+  Thrift.TException.call(this, "FileNotFound")
+  this.name = "FileNotFound"
+};
+Thrift.inherits(FileNotFound, Thrift.TException);
+FileNotFound.prototype.name = 'FileNotFound';
+FileNotFound.prototype.read = function(input) {
+  input.readStructBegin();
+  while (true)
+  {
+    var ret = input.readFieldBegin();
+    var fname = ret.fname;
+    var ftype = ret.ftype;
+    var fid = ret.fid;
+    if (ftype == Thrift.Type.STOP) {
+      break;
+    }
+    input.skip(ftype);
+    input.readFieldEnd();
+  }
+  input.readStructEnd();
+  return;
+};
+
+FileNotFound.prototype.write = function(output) {
+  output.writeStructBegin('FileNotFound');
+  output.writeFieldStop();
+  output.writeStructEnd();
+  return;
+};
+

@@ -5,7 +5,7 @@ var ttypes = require("./logservice/LogService_types");
 
 var file = false;
 
-var server = thrift.createServer(Logger, {
+var LoggerHandler = {
   startLogging: function(filename, result) {
     if(!file) {
         // <add filename verification here>
@@ -38,7 +38,9 @@ var server = thrift.createServer(Logger, {
     // console.log(message);
     result(true);
   }
-}).on('error', function(err) {
+};
+
+var server = thrift.createServer(Logger, LoggerHandler).on('error', function(err) {
     // handle new errors as they arise
     switch(err.code) {
         case 'ECONNRESET':

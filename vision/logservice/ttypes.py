@@ -20,19 +20,77 @@ class Level:
   """
   Enumerations
   """
-  INFO = 0
-  WARNING = 1
-  SEVERE = 2
+  DEBUG = 0
+  INFO = 1
+  WARNING = 2
+  ERROR = 3
+  FATAL = 4
 
   _VALUES_TO_NAMES = {
-    0: "INFO",
-    1: "WARNING",
-    2: "SEVERE",
+    0: "DEBUG",
+    1: "INFO",
+    2: "WARNING",
+    3: "ERROR",
+    4: "FATAL",
   }
 
   _NAMES_TO_VALUES = {
-    "INFO": 0,
-    "WARNING": 1,
-    "SEVERE": 2,
+    "DEBUG": 0,
+    "INFO": 1,
+    "WARNING": 2,
+    "ERROR": 3,
+    "FATAL": 4,
   }
 
+
+class FileNotFound(TException):
+  """
+  Exceptions
+  """
+
+  thrift_spec = (
+  )
+
+  def read(self, iprot):
+    if iprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None and fastbinary is not None:
+      fastbinary.decode_binary(self, iprot.trans, (self.__class__, self.thrift_spec))
+      return
+    iprot.readStructBegin()
+    while True:
+      (fname, ftype, fid) = iprot.readFieldBegin()
+      if ftype == TType.STOP:
+        break
+      else:
+        iprot.skip(ftype)
+      iprot.readFieldEnd()
+    iprot.readStructEnd()
+
+  def write(self, oprot):
+    if oprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and self.thrift_spec is not None and fastbinary is not None:
+      oprot.trans.write(fastbinary.encode_binary(self, (self.__class__, self.thrift_spec)))
+      return
+    oprot.writeStructBegin('FileNotFound')
+    oprot.writeFieldStop()
+    oprot.writeStructEnd()
+
+  def validate(self):
+    return
+
+
+  def __str__(self):
+    return repr(self)
+
+  def __hash__(self):
+    value = 17
+    return value
+
+  def __repr__(self):
+    L = ['%s=%r' % (key, value)
+      for key, value in self.__dict__.iteritems()]
+    return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+  def __eq__(self, other):
+    return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+  def __ne__(self, other):
+    return not (self == other)
