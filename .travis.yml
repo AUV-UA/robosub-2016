@@ -37,5 +37,9 @@ before_script:
     # - cd ../..
 script:
     #generate thrift files and copy into place
-    - cd thrift && sh gen.sh
+    - sh thrift/gen.sh
     #add test scripts here
+    - cd logging
+    - npm install
+    - node index.js &
+    - npm test
