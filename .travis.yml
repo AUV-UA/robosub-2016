@@ -17,6 +17,8 @@ install:
     - sudo apt-get install automake
     - sudo apt-get install libboost-dev libboost-test-dev libboost-program-options-dev libevent-dev libtool flex bison pkg-config g++ libssl-dev
     # - sudo apt-get install build-essential libgtk2.0-dev libjpeg-dev libtiff4-dev libjasper-dev libopenexr-dev cmake python-dev python-numpy python-tk libtbb-dev libeigen3-dev yasm libfaac-dev libopencore-amrnb-dev libopencore-amrwb-dev libtheora-dev libvorbis-dev libxvidcore-dev libx264-dev libqt4-dev libqt4-opengl-dev sphinx-common texlive-latex-extra libv4l-dev libdc1394-22-dev libavcodec-dev libavformat-dev libswscale-dev default-jdk libvtk5-qt4-dev
+    - cd remote && npm install
+    - cd ..
 before_script:
     #install thrift
     - curl http://www.carfab.com/apachesoftware/thrift/0.9.3/thrift-0.9.3.tar.gz > thrift-0.9.3.tar.gz

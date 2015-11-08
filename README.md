@@ -9,6 +9,20 @@ The software is split into standalone programs, with Apache Thrift used for both
 Start by installing the latest version of [Apache Thrift](https://thrift.apache.org/docs/install/).
 Then, navigate to `REPO_DIR/thrift/` and run `gen.sh`. This will generate and install the thrift services in their respective service directories.
 
+## Remote Interface
+The GUI, or remote interface (AUVUA-RI) for the vehicle is implemented as a server - specifically, an expressjs app. The related code is located under `/remote`.
+
+Install dependencies first, then start the server:
+```
+cd remote
+npm install
+npm start
+```
+
+Navigate a browser to point to the target machine's IP at port 3000. If viewing on the machine, the URL would be `localhost:3000`.
+
+Enjoy!
+
 ## Vision
 The vision server is implemented in Python and requires OpenCV 2.X/3.0, along with the OpenCV python bindings.
 
