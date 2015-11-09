@@ -29,14 +29,14 @@ describe('Logging to new file', function() {
     });
   });
 
-  it('set the log directory to ./', function(done) {
-    client.setLogDirectory('./', function(err, response) {
+  it('set the log directory to ' + __dirname, function(done) {
+    client.setLogDirectory(__dirname, function(err, response) {
       test.assert(response === true);
       done();
     });
   });
 
-  it('return a non-empty list of files in ./', function(done) {
+  it('return a non-empty list of files in ' + __dirname, function(done) {
     client.getLogFileList(function(err, response) {
       test.assert(response.length > 0);
       done();
@@ -64,11 +64,11 @@ describe('Logging to new file', function() {
     });
   });
 
-  it('writes out message to log file "./test.txt"', function(done) {
+  it('writes out message to log file "' + __dirname + '/test.txt"', function(done) {
     var textmsg = JSON.stringify(msg);
     client.log(ttypes.Level.INFO, textmsg);
     setTimeout(function() {
-      var contents = fs.readFileSync('./test.txt');
+      var contents = fs.readFileSync(__dirname + '/test.txt');
       var rxmsg = JSON.stringify(JSON.parse(contents)['message']);
       test.assert(rxmsg === textmsg);
       done();
@@ -97,6 +97,8 @@ describe('Logging to new file', function() {
   });
 
   after(function() {
-    fs.unlinkSync('./test.txt');
+    try {
+      fs.unlinkSync(__dirname + '/test.txt');
+    } catch (e) {}
   });
 });
