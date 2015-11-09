@@ -1,5 +1,10 @@
 #!/bin/bash
 
+#make sure we're in the script directory
+if [ -d ${0%/*} ] ; then
+  cd ${0%/*}
+fi
+
 #remove old generated files
 echo "Removing old files"
 rm -rf ./gen-*
@@ -25,4 +30,9 @@ echo "Copying generated files to ../logging/server/"
 rm -rf ../logging/logservice/*
 cp -r ./gen-nodejs/* ../logging/logservice
 
-echo -e "\nDone."
+echo "Copying generated files to ../remote/services/"
+rm -rf ../remote/services/*
+cp -r ./gen-nodejs/* ../remote/services/
+
+echo ""
+echo "Done."

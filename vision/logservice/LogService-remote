@@ -24,9 +24,13 @@ if len(sys.argv) <= 1 or sys.argv[1] == '--help':
   print('Usage: ' + sys.argv[0] + ' [-h host[:port]] [-u url] [-f[ramed]] [-s[sl]] function [arg1 [arg2...]]')
   print('')
   print('Functions:')
+  print('  bool setLogDirectory(string path)')
+  print('   getLogFileList()')
+  print('  string getLogFile(string filename)')
   print('  bool startLogging(string filename)')
+  print('  bool isLogging()')
   print('  bool stopLogging()')
-  print('  bool log(Level level, i32 msTime, string message)')
+  print('  void log(Level level, string message)')
   print('')
   sys.exit(0)
 
@@ -83,11 +87,35 @@ protocol = TBinaryProtocol.TBinaryProtocol(transport)
 client = LogService.Client(protocol)
 transport.open()
 
-if cmd == 'startLogging':
+if cmd == 'setLogDirectory':
+  if len(args) != 1:
+    print('setLogDirectory requires 1 args')
+    sys.exit(1)
+  pp.pprint(client.setLogDirectory(args[0],))
+
+elif cmd == 'getLogFileList':
+  if len(args) != 0:
+    print('getLogFileList requires 0 args')
+    sys.exit(1)
+  pp.pprint(client.getLogFileList())
+
+elif cmd == 'getLogFile':
+  if len(args) != 1:
+    print('getLogFile requires 1 args')
+    sys.exit(1)
+  pp.pprint(client.getLogFile(args[0],))
+
+elif cmd == 'startLogging':
   if len(args) != 1:
     print('startLogging requires 1 args')
     sys.exit(1)
   pp.pprint(client.startLogging(args[0],))
+
+elif cmd == 'isLogging':
+  if len(args) != 0:
+    print('isLogging requires 0 args')
+    sys.exit(1)
+  pp.pprint(client.isLogging())
 
 elif cmd == 'stopLogging':
   if len(args) != 0:
@@ -96,10 +124,10 @@ elif cmd == 'stopLogging':
   pp.pprint(client.stopLogging())
 
 elif cmd == 'log':
-  if len(args) != 3:
-    print('log requires 3 args')
+  if len(args) != 2:
+    print('log requires 2 args')
     sys.exit(1)
-  pp.pprint(client.log(eval(args[0]),eval(args[1]),args[2],))
+  pp.pprint(client.log(eval(args[0]),args[1],))
 
 else:
   print('Unrecognized method %s' % cmd)

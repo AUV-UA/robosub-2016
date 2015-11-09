@@ -1,0 +1,16 @@
+{
+  "str": {
+    "welcomeTitle": "Greetings!",
+    "welcomeMsg": "Welcome to this AUV's Remote Interface. <br/>Visit the <a href='/dash'>dashboard</a> to get started."
+  },
+  "navbar": {
+    "title": "AUVUA-RI",
+    "links": [
+      {"title": "Dashboard", "href": "/dash"},
+      {"title": "Mission Planner", "href": "/plan"},
+      {"title": "Vision Filters", "href": "/vision"},
+      {"title": "Logs", "href": "/logs"},
+      {"title": "Settings", "href": "/settings"}
+    ]
+  }
+}

@@ -1,0 +1,45 @@
+extends layout
+
+block content
+  include navbar.jade
+  .container
+    .row
+      .col-md-1
+        .label.label-success Connected
+      .col-md-1
+        .pull-left V: &nbsp;
+        b 12.8
+      .col-md-1
+        .pull-left A: &nbsp;
+        b 41.1
+      .col-md-9
+        .pull-left Battery: &nbsp;
+        .progress(style="margin-top: 8px;")
+          .progress-bar.progress-bar-warning(style="width:40%;")
+    .row
+      .col-md-9
+        .panel.panel-default
+          .panel-body
+            img(style="width: 100%;", alt="primary")
+      .col-md-3
+        .panel.panel-default
+          .panel-heading
+            .label.label-primary.pull-left(style="margin-right: 10px;") Swap
+            h4.panel-title Secondary Camera
+          .panel-body
+            img(style="width:100%; height: auto;", alt="secondary")
+        .panel.panel-default
+          .panel-heading
+            h4.panel-title Telemetry
+          .panel-body
+            p This is some telemetry
+        .well.well-sm
+          h5 Some controls
+          p controls controls 
+    .row
+      .col-md-12
+        .panel.panel-default
+          .panel-heading
+            h4.panel-title Mission Log
+          .panel-body
+            p This is some logged message! or something

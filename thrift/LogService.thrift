@@ -10,15 +10,18 @@ namespace py logservice
  * Enumerations
  */
 enum Level {
-    INFO = 0
-    WARNING = 1
-    SEVERE = 2
+    DEBUG = 0
+    INFO = 1
+    WARNING = 2
+    ERROR = 3
+    FATAL = 4
 }
 
 
 /**
  * Exceptions
  */
+exception FileNotFound { }
 
 
 /**
@@ -30,7 +33,11 @@ enum Level {
  * Services
  */
 service LogService {
+    bool setLogDirectory(1: required string path)
+    list<string> getLogFileList()
+    string getLogFile(1: required string filename) throws (1: FileNotFound err)
     bool startLogging(1: required string filename)
+    bool isLogging()
     bool stopLogging()
-    bool log(1: required Level level, 2: required i32 msTime, 3: required string message)
+    oneway void log(1: required Level level, 2: required string message)
 }
