@@ -24,7 +24,7 @@ Navigate a browser to point to the target machine's IP at port 3000. If viewing 
 Enjoy!
 
 ## Vision
-The vision server is implemented in Python and requires OpenCV 2.X/3.0, along with the OpenCV python bindings.
+The vision server is implemented in Python and requires OpenCV 2.4/3.0, along with the OpenCV python bindings.
 
 To run, start the vision server:
 ```
@@ -43,4 +43,14 @@ Set up the logging service by installing node dependencies.
 Navigate to `REPO_DIR/logging/` and run:
 ```
 npm install
+```
+
+Start the logging service:
+```
+DEBUG=app node index.js
+```
+
+To test the service, make sure it is running, then start the tests:
+```
+npm test
 ```

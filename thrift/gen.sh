@@ -30,5 +30,9 @@ echo "Copying generated files to ../logging/server/"
 rm -rf ../logging/logservice/*
 cp -r ./gen-nodejs/* ../logging/logservice
 
+echo "Copying generated files to ../remote/services/"
+rm -rf ../remote/services/*
+cp -r ./gen-nodejs/* ../remote/services/
+
 echo ""
 echo "Done."
